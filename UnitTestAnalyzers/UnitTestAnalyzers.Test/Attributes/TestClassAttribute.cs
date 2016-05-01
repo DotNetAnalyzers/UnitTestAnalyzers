@@ -3,7 +3,7 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class TestClassAttribute  : Attribute
+    public class TestClassAttribute : Attribute
     {
     }
 }

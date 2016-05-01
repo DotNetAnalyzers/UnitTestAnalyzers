@@ -221,7 +221,5 @@ namespace TestHelper
                 return new DiagnosticResult(supportedDiagnostics.Single(i => i.Id == diagnosticId));
             }
         }
-
     }
 }
-

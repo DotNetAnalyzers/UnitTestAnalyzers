@@ -10,8 +10,7 @@
     {
         internal const string MemberUnderTestRegexGroupName = "memberUnderTestName";
 
-        internal static Regex DefaultRegex = new Regex(        //internal static Regex DefaultRegex = new Regex(@"\b(?=(?:.*?_){2,})(?<{MemberUnderTestRegexGroupName}>[a-zA-Z]+)(?:_When[A-Z]+[a-zA-Z0-9]+)*(?:_Using[A-Z]+[a-zA-Z]+)*(?:_Expects|_Throws)[A-Z]+[a-zA-Z]+\b");
-$@"\b(?=(?:.*?_){{2,}})(?<{MemberUnderTestRegexGroupName}>[a-zA-Z]+)(?:_When[A-Z]+[a-zA-Z0-9]+)*(?:_Using[A-Z]+[a-zA-Z]+)*(?:_Expects|_Throws)[A-Z]+[a-zA-Z]+\b");
+        internal static Regex DefaultRegex = new Regex($@"\b(?=(?:.*?_){{2,}})(?<{MemberUnderTestRegexGroupName}>[a-zA-Z]+)(?:_When[A-Z]+[a-zA-Z0-9]+)*(?:_Using[A-Z]+[a-zA-Z]+)*(?:_Expects|_Throws)[A-Z]+[a-zA-Z]+\b");
 
         internal static string DefaultFormat = "(MemberUnderTestName)_(When[a-zA-Z])[0...n]_(Using[a-zA-Z])[0...n]_([Expects|Throws][a-zA-Z])";
 
@@ -21,7 +20,7 @@ $@"\b(?=(?:.*?_){{2,}})(?<{MemberUnderTestRegexGroupName}>[a-zA-Z]+)(?:_When[A-Z
         [JsonProperty("unitTestFramework", DefaultValueHandling = DefaultValueHandling.Include)]
         [JsonConverter(typeof(StringEnumConverter))]
         private UnitTestFramework unitTestFramework;
-        
+
         /// <summary>
         /// This is the backing field for the <see cref="TestMethodNameFormatRegex"/> property.
         /// </summary>
@@ -38,20 +37,23 @@ $@"\b(?=(?:.*?_){{2,}})(?<{MemberUnderTestRegexGroupName}>[a-zA-Z]+)(?:_When[A-Z
         /// This is the backing field for the <see cref="TestMethodNameFormatExamples"/> property.
         /// </summary>
         [JsonProperty("testMethodNameFormatExamples", DefaultValueHandling = DefaultValueHandling.Include)]
-        internal ImmutableArray<string>.Builder testMethodNameFormatExamples;
+        internal ImmutableArray<string>.Builder TestMethodNameFormatExamplesValue;
 
         [JsonConstructor]
         internal AnalyzersSettings()
         {
-            unitTestFramework = UnitTestFramework.MSTest;
-            testMethodNameFormatExamples = ImmutableArray<string>.Empty.ToBuilder();
-            testMethodNameFormatRegex = DefaultRegex;
-            testMethodNameFormat = DefaultFormat;
+            this.unitTestFramework = UnitTestFramework.MSTest;
+            this.TestMethodNameFormatExamplesValue = ImmutableArray<string>.Empty.ToBuilder();
+            this.testMethodNameFormatRegex = DefaultRegex;
+            this.testMethodNameFormat = DefaultFormat;
         }
-        
+
         public UnitTestFramework UnitTestFramework => this.unitTestFramework;
+
         public Regex TestMethodNameFormatRegex => this.testMethodNameFormatRegex;
+
         public string TestMethodNameFormat => this.testMethodNameFormat;
-        public ImmutableArray<string> TestMethodNameFormatExamples => this.testMethodNameFormatExamples.ToImmutable();
+
+        public ImmutableArray<string> TestMethodNameFormatExamples => this.TestMethodNameFormatExamplesValue.ToImmutable();
     }
 }

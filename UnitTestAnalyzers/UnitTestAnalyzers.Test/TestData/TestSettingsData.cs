@@ -14,11 +14,11 @@
 
         internal const string NoSampleProvided = "NO SAMPLE PROVIDED!";
 
-        internal static string[] TestMethodNameFormatSimpleRegexExamples = {"TestMethodOne", "TestMethodTwo"};
+        internal static string[] TestMethodNameFormatSimpleRegexExamples = { "TestMethodOne", "TestMethodTwo" };
 
-        internal static string[] TestMethodNameFormatDefaultRegexExamples = {"TestMethod_WhenFoo_ExpectsResult", "TestMethod_UsingFoo_ThrowsError"};
+        internal static string[] TestMethodNameFormatDefaultRegexExamples = { "TestMethod_WhenFoo_ExpectsResult", "TestMethod_UsingFoo_ThrowsError" };
 
-        internal const string TestMethodNameDefaultFormat =  "(MemberUnderTestName)_(When[a-zA-Z])[0...n]_(Using[a-zA-Z])[0...n]_([Expects|Throws][a-zA-Z])";
+        internal const string TestMethodNameDefaultFormat = "(MemberUnderTestName)_(When[a-zA-Z])[0...n]_(Using[a-zA-Z])[0...n]_([Expects|Throws][a-zA-Z])";
 
         internal static string MSTestSettings = @"{
                 ""settings"" : {
@@ -61,7 +61,6 @@
                 ""testMethodNameFormatRegex"" : {{""Pattern"" : {TestMethodNameMemberUnderTestRegex} }}
                  }}
               }}";
-
 
         internal static string XunitTestSettingsSimpleRegex =
             $@"{{

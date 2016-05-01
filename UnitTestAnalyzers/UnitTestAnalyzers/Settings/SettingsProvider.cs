@@ -63,7 +63,7 @@ namespace UnitTestAnalyzers.Settings
 
             return currentSettingsCache.Item2;
         }
- 
+
         internal static AnalyzersSettings GetSettings(CompilationStartAnalysisContext context)
         {
             StrongBox<AnalyzersSettings> cachedSettings = GetOrCreateCachedSettings(context.Compilation);
@@ -86,7 +86,7 @@ namespace UnitTestAnalyzers.Settings
 
                 if (settings.TestMethodNameFormatRegex.Equals(AnalyzersSettings.DefaultRegex))
                 {
-                    settings.testMethodNameFormatExamples.AddRange(new[] {"TestMethod_WhenFoo_ExpectsResult", "TestMethod_UsingFoo_ThrowsError"});
+                    settings.TestMethodNameFormatExamplesValue.AddRange(new[] { "TestMethod_WhenFoo_ExpectsResult", "TestMethod_UsingFoo_ThrowsError" });
                 }
 
                 cachedSettings.Value = settings;

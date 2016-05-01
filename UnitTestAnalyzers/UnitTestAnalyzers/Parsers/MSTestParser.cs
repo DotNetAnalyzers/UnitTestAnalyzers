@@ -20,11 +20,17 @@
 
             IEnumerable<AttributeSyntax> attributes = classDeclaration?.AttributeLists.SelectMany(x => x.Attributes).ToList();
 
-            if (!attributes?.Any() ?? true) return false;
+            if (!attributes?.Any() ?? true)
+            {
+                return false;
+            }
 
-            AttributeSyntax testClassAttribute = attributes.FirstOrDefault(x => (x.Name.ToString().EndsWith("TestClass", StringComparison.Ordinal)));
+            AttributeSyntax testClassAttribute = attributes.FirstOrDefault(x => x.Name.ToString().EndsWith("TestClass", StringComparison.Ordinal));
 
-            if (testClassAttribute == null) return false;
+            if (testClassAttribute == null)
+            {
+                return false;
+            }
 
             var attributeSymbol = context.SemanticModel.GetSymbolInfo(testClassAttribute).Symbol as IMethodSymbol;
 
@@ -42,11 +48,17 @@
 
             IEnumerable<AttributeSyntax> attributes = methodDeclaration?.AttributeLists.SelectMany(x => x.Attributes).ToList();
 
-            if (!attributes?.Any() ?? true) return false;
+            if (!attributes?.Any() ?? true)
+            {
+                return false;
+            }
 
-            AttributeSyntax testMethodAttribute = attributes.FirstOrDefault(x => (x.Name.ToString().EndsWith("TestMethod", StringComparison.Ordinal)));
+            AttributeSyntax testMethodAttribute = attributes.FirstOrDefault(x => x.Name.ToString().EndsWith("TestMethod", StringComparison.Ordinal));
 
-            if (testMethodAttribute == null) return false;
+            if (testMethodAttribute == null)
+            {
+                return false;
+            }
 
             var attributeSymbol = context.SemanticModel.GetSymbolInfo(testMethodAttribute).Symbol as IMethodSymbol;
 

@@ -26,7 +26,9 @@ namespace TestHelper
         }
 
         public string Path { get; }
+
         public int Line { get; }
+
         public int Column { get; }
     }
 
@@ -55,6 +57,7 @@ namespace TestHelper
                 {
                     this.locations = new DiagnosticResultLocation[] { };
                 }
+
                 return this.locations;
             }
 
@@ -101,7 +104,7 @@ namespace TestHelper
         {
             get
             {
-                return this.Locations.Length > 0 ? this.Locations[0].Path : "";
+                return this.Locations.Length > 0 ? this.Locations[0].Path : string.Empty;
             }
         }
 

@@ -31,7 +31,7 @@
         {
             return null;
         }
-        
+
         /// <summary>
         /// Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source
         /// Note: input a DiagnosticResult for each Diagnostic expected
@@ -40,7 +40,7 @@
         /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult expected, CancellationToken cancellationToken, bool usePortableReference = false)
         {
-            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, GetCSharpDiagnosticAnalyzer(), new[] { expected }, cancellationToken, usePortableReference);
+            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), new[] { expected }, cancellationToken, usePortableReference);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@
         /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken, bool usePortableReference = false)
         {
-            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, GetCSharpDiagnosticAnalyzer(), expected, cancellationToken, usePortableReference);
+            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected, cancellationToken, usePortableReference);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the source</param>
         protected Task VerifyBasicDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken)
         {
-            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.VisualBasic, GetBasicDiagnosticAnalyzer(), expected, cancellationToken);
+            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected, cancellationToken);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         protected Task VerifyCSharpDiagnosticAsync(string[] sources, DiagnosticResult[] expected, CancellationToken cancellationToken, bool usePortableReference = false)
         {
-            return this.VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, GetCSharpDiagnosticAnalyzer(), expected, cancellationToken, usePortableReference);
+            return this.VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected, cancellationToken, usePortableReference);
         }
 
         /// <summary>
@@ -84,11 +84,11 @@
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         protected Task VerifyBasicDiagnosticAsync(string[] sources, DiagnosticResult[] expected, CancellationToken cancellationToken)
         {
-            return this.VerifyDiagnosticsAsync(sources, LanguageNames.VisualBasic, GetBasicDiagnosticAnalyzer(), expected, cancellationToken);
+            return this.VerifyDiagnosticsAsync(sources, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected, cancellationToken);
         }
 
         /// <summary>
-        /// General method that gets a collection of actual diagnostics found in the source after the analyzer is run, 
+        /// General method that gets a collection of actual diagnostics found in the source after the analyzer is run,
         /// then verifies each of them.
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
@@ -97,7 +97,7 @@
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         private async Task VerifyDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, DiagnosticResult[] expected, CancellationToken cancellationToken, bool usePortableReference = false)
         {
-            var diagnostics = await GetSortedDiagnosticsAsync(sources, language, analyzer, cancellationToken, usePortableReference).ConfigureAwait(false);
+            var diagnostics = await this.GetSortedDiagnosticsAsync(sources, language, analyzer, cancellationToken, usePortableReference).ConfigureAwait(false);
             VerifyDiagnosticResults(diagnostics, analyzer, expected);
         }
 
@@ -117,7 +117,8 @@
             {
                 string diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzer, actualResults.ToArray()) : "    NONE.";
 
-                Assert.True(false,
+                Assert.True(
+                    false,
                     string.Format("Mismatch between number of diagnostics returned, expected \"{0}\" actual \"{1}\"\r\n\r\nDiagnostics:\r\n{2}\r\n", expectedCount, actualCount, diagnosticsOutput));
             }
 
@@ -130,8 +131,10 @@
                 {
                     if (actual.Location != Location.None)
                     {
-                        Assert.True(false,
-                            string.Format("Expected:\nA project diagnostic with No location\nActual:\n{0}",
+                        Assert.True(
+                            false,
+                            string.Format(
+                                "Expected:\nA project diagnostic with No location\nActual:\n{0}",
                             FormatDiagnostics(analyzer, actual)));
                     }
                 }
@@ -142,9 +145,12 @@
 
                     if (additionalLocations.Length != expected.Locations.Length - 1)
                     {
-                        Assert.True(false,
-                            string.Format("Expected {0} additional locations but got {1} for Diagnostic:\r\n    {2}\r\n",
-                                expected.Locations.Length - 1, additionalLocations.Length,
+                        Assert.True(
+                            false,
+                            string.Format(
+                                "Expected {0} additional locations but got {1} for Diagnostic:\r\n    {2}\r\n",
+                                expected.Locations.Length - 1,
+                                additionalLocations.Length,
                                 FormatDiagnostics(analyzer, actual)));
                     }
 
@@ -156,23 +162,35 @@
 
                 if (actual.Id != expected.Id)
                 {
-                    Assert.True(false,
-                        string.Format("Expected diagnostic id to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                            expected.Id, actual.Id, FormatDiagnostics(analyzer, actual)));
+                    Assert.True(
+                        false,
+                        string.Format(
+                            "Expected diagnostic id to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
+                            expected.Id,
+                            actual.Id,
+                            FormatDiagnostics(analyzer, actual)));
                 }
 
                 if (actual.Severity != expected.Severity)
                 {
-                    Assert.True(false,
-                        string.Format("Expected diagnostic severity to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                            expected.Severity, actual.Severity, FormatDiagnostics(analyzer, actual)));
+                    Assert.True(
+                        false,
+                        string.Format(
+                            "Expected diagnostic severity to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
+                            expected.Severity,
+                            actual.Severity,
+                            FormatDiagnostics(analyzer, actual)));
                 }
 
                 if (actual.GetMessage() != expected.Message)
                 {
-                    Assert.True(false,
-                        string.Format("Expected diagnostic message to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                            expected.Message, actual.GetMessage(), FormatDiagnostics(analyzer, actual)));
+                    Assert.True(
+                        false,
+                        string.Format(
+                            "Expected diagnostic message to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
+                            expected.Message,
+                            actual.GetMessage(),
+                            FormatDiagnostics(analyzer, actual)));
                 }
             }
         }
@@ -188,9 +206,13 @@
         {
             var actualSpan = actual.GetLineSpan();
 
-            Assert.True(actualSpan.Path == expected.Path || (actualSpan.Path != null && actualSpan.Path.Contains("Test0.") && expected.Path.Contains("Test.")),
-                string.Format("Expected diagnostic to be in file \"{0}\" was actually in file \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                    expected.Path, actualSpan.Path, FormatDiagnostics(analyzer, diagnostic)));
+            Assert.True(
+                actualSpan.Path == expected.Path || (actualSpan.Path != null && actualSpan.Path.Contains("Test0.") && expected.Path.Contains("Test.")),
+                string.Format(
+                    "Expected diagnostic to be in file \"{0}\" was actually in file \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
+                    expected.Path,
+                    actualSpan.Path,
+                    FormatDiagnostics(analyzer, diagnostic)));
 
             var actualLinePosition = actualSpan.StartLinePosition;
 
@@ -199,9 +221,13 @@
             {
                 if (actualLinePosition.Line + 1 != expected.Line)
                 {
-                    Assert.True(false,
-                        string.Format("Expected diagnostic to be on line \"{0}\" was actually on line \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                            expected.Line, actualLinePosition.Line + 1, FormatDiagnostics(analyzer, diagnostic)));
+                    Assert.True(
+                        false,
+                        string.Format(
+                            "Expected diagnostic to be on line \"{0}\" was actually on line \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
+                            expected.Line,
+                            actualLinePosition.Line + 1,
+                            FormatDiagnostics(analyzer, diagnostic)));
                 }
             }
 
@@ -210,9 +236,13 @@
             {
                 if (actualLinePosition.Character + 1 != expected.Column)
                 {
-                    Assert.True(false,
-                        string.Format("Expected diagnostic to start at column \"{0}\" was actually at column \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
-                            expected.Column, actualLinePosition.Character + 1, FormatDiagnostics(analyzer, diagnostic)));
+                    Assert.True(
+                        false,
+                        string.Format(
+                            "Expected diagnostic to start at column \"{0}\" was actually at column \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
+                            expected.Column,
+                            actualLinePosition.Character + 1,
+                            FormatDiagnostics(analyzer, diagnostic)));
                 }
             }
         }
@@ -244,13 +274,15 @@
                         }
                         else
                         {
-                            Assert.True(location.IsInSource,
+                            Assert.True(
+                                location.IsInSource,
                                 $"Test base does not currently handle diagnostics in metadata locations. Diagnostic in metadata: {diagnostics[i]}\r\n");
 
                             string resultMethodName = diagnostics[i].Location.SourceTree.FilePath.EndsWith(".cs") ? "GetCSharpResultAt" : "GetBasicResultAt";
                             var linePosition = diagnostics[i].Location.GetLineSpan().StartLinePosition;
 
-                            builder.AppendFormat("{0}({1}, {2}, {3}.{4})",
+                            builder.AppendFormat(
+                                "{0}({1}, {2}, {3}.{4})",
                                 resultMethodName,
                                 linePosition.Line + 1,
                                 linePosition.Character + 1,
@@ -268,6 +300,7 @@
                     }
                 }
             }
+
             return builder.ToString();
         }
     }

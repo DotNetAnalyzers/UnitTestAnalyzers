@@ -6,24 +6,26 @@
     using TestData;
     using TestHelper;
     using Xunit;
-    
+
     public class UseUnitTestsSuffixFunctionalTests : DiagnosticVerifier
     {
         private string settings;
-    
-        [Theory, ClassData(typeof(UseUnitTestsSuffixMSTestValidData))]
+
+        [Theory]
+        [ClassData(typeof(UseUnitTestsSuffixMSTestValidData))]
         public async Task UseUnitTestsSuffix_MSTestCodeWithoutViolation_ExpectsNoDiagnostic(string testCode, string settings)
         {
             this.settings = settings;
-            await VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
+            await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None).ConfigureAwait(false);
         }
 
-        [Theory, ClassData(typeof(UseUnitTestsSuffixMSTestInvalidData))]
+        [Theory]
+        [ClassData(typeof(UseUnitTestsSuffixMSTestInvalidData))]
         public async Task UseUnitTestsSuffix_MSTestCodeWithViolation_ExpectsDiagnostic(string testCode, string testClassName, int violantioLine, int violationColumn, string settings)
         {
             this.settings = settings;
-            DiagnosticResult expected = CSharpDiagnostic().WithArguments(testClassName).WithLocation(violantioLine, violationColumn);
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+            DiagnosticResult expected = this.CSharpDiagnostic().WithArguments(testClassName).WithLocation(violantioLine, violationColumn);
+            await this.VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
         }
 
         /// <summary>

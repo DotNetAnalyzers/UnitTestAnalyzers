@@ -39,7 +39,7 @@ namespace UnitTestAnalyzers
 
             switch (settings.UnitTestFramework)
             {
-                    case UnitTestFramework.MSTest: 
+                    case UnitTestFramework.MSTest:
                     unitTestParser = new MSTestParser();
                     break;
 
@@ -52,11 +52,17 @@ namespace UnitTestAnalyzers
 
         private static void AnalyzeNode(SyntaxNodeAnalysisContext context, IUnitTestParser parser)
         {
-            if (!parser.IsUnitTestClass(context)) return;
+            if (!parser.IsUnitTestClass(context))
+            {
+                return;
+            }
 
-            ClassDeclarationSyntax classDeclaration = (ClassDeclarationSyntax) context.Node;
+            ClassDeclarationSyntax classDeclaration = (ClassDeclarationSyntax)context.Node;
 
-            if (classDeclaration.Identifier.ToString().EndsWith("UnitTests")) return;
+            if (classDeclaration.Identifier.ToString().EndsWith("UnitTests"))
+            {
+                return;
+            }
 
             var diagnostic = Diagnostic.Create(Rule, classDeclaration.Identifier.GetLocation(), classDeclaration.Identifier.ToString());
 
