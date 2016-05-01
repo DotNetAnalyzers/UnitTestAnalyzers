@@ -31,6 +31,11 @@
             return attributeSymbol?.ToString().StartsWith("Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute", StringComparison.Ordinal) ?? false;
         }
 
+        /// <summary>
+        /// Determines whether the provided node analysis context refers to a MSTest class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>Whether the provided node analysis context refers to a MsTest class.</returns>
         public bool IsUnitTestMethod(SyntaxNodeAnalysisContext context)
         {
             MethodDeclarationSyntax methodDeclaration = context.Node as MethodDeclarationSyntax;
