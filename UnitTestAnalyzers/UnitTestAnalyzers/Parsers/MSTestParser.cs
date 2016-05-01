@@ -9,6 +9,11 @@
 
     internal class MSTestParser : IUnitTestParser
     {
+        /// <summary>
+        /// Determines whether the provided node analysis context refers to a MSTest class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>Whether the provided node analysis context refers to a MsTest class.</returns>
         public bool IsUnitTestClass(SyntaxNodeAnalysisContext context)
         {
             ClassDeclarationSyntax classDeclaration = context.Node as ClassDeclarationSyntax;
