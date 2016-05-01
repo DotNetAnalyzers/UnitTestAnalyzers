@@ -1,32 +1,44 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Diagnostics;
-
 namespace UnitTestAnalyzers
 {
+    using System;
+    using System.Collections.Immutable;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
+    using Microsoft.CodeAnalysis.Diagnostics;
     using Parsers;
     using Settings;
     using Settings.ObjectModel;
 
+    /// <summary>
+    /// This analyzer identifies a test class and reports a warning if the test class name
+    /// does not have the suffic 'UnitTests'.
+    /// </summary>
+    /// <seealso cref="Microsoft.CodeAnalysis.Diagnostics.DiagnosticAnalyzer" />
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class UseUnitTestsSuffixAnalyzer : DiagnosticAnalyzer
     {
+        /// <summary>
+        /// The ID for diagnostics produced by the <see cref="UseUnitTestsSuffixAnalyzer"/> analyzer.
+        /// </summary>
         public const string DiagnosticId = "UnitTestAnalyzers";
+        private const string Category = "Naming";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.UseUnitTestsSuffixTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.UseUnitTestsSuffixMessage), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.UseUnitTestsSuffixDescription), Resources.ResourceManager, typeof(Resources));
-        private const string Category = "Naming";
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
-        private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+        /// <inheritdoc/>
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
+        {
+            get
+            {
+                return ImmutableArray.Create(Rule);
+            }
+        }
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
-
+        /// <inheritdoc/>
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterCompilationStartAction(HandleCompilationStart);

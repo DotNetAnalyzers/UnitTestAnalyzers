@@ -28,9 +28,6 @@
             await this.VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Get the CSharp analyzer being tested.
-        /// </summary>
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
             return new UseUnitTestsSuffixAnalyzer();

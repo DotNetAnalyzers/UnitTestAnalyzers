@@ -1,19 +1,17 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Text;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using msTest = Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace TestHelper
+﻿namespace TestHelper
 {
-    using System.Reflection;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using UnitTestAnalyzers.Test.Attributes;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.Diagnostics;
+    using Microsoft.CodeAnalysis.Text;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using UnitTestAnalyzers.Test.TestData;
     using Xunit;
 
     /// <summary>
@@ -22,22 +20,22 @@ namespace TestHelper
     /// </summary>
     public abstract partial class DiagnosticVerifier
     {
+        private const string DefaultFilePathPrefix = "Test";
+        private const string CSharpDefaultFileExt = "cs";
+        private const string VisualBasicDefaultExt = "vb";
+        private const string TestProjectName = "TestProject";
+        private const string SettingsFileName = "unittestcodeanalysis.json";
+
         private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
-        private static readonly MetadataReference ThisProjectReference = MetadataReference.CreateFromFile(typeof(TestClassAttribute).Assembly.Location);
-        private static readonly MetadataReference MsTestReference = MetadataReference.CreateFromFile(typeof(msTest.TestClassAttribute).Assembly.Location);
+        private static readonly MetadataReference ThisProjectReference = MetadataReference.CreateFromFile(typeof(TestSettingsData).Assembly.Location);
+        private static readonly MetadataReference MsTestReference = MetadataReference.CreateFromFile(typeof(TestClassAttribute).Assembly.Location);
         private static readonly MetadataReference XunitReference = MetadataReference.CreateFromFile(typeof(TheoryAttribute).Assembly.Location);
+
         // TODO from emanoel to emanoel: Remove this hardcoded value for the PCL library.
         private static readonly MetadataReference PortableCorlibReference = MetadataReference.CreateFromFile(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETPortable\v4.5\Profile\Profile7\System.Runtime.dll");
-
-        internal static string DefaultFilePathPrefix = "Test";
-        internal static string CSharpDefaultFileExt = "cs";
-        internal static string VisualBasicDefaultExt = "vb";
-        internal static string TestProjectName = "TestProject";
-
-        private const string SettingsFileName = "unittestcodeanalysis.json";
 
         /// <summary>
         /// Given classes in the form of strings, their language, and an <see cref="DiagnosticAnalyzer"/> to apply to
@@ -51,9 +49,9 @@ namespace TestHelper
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that the task will observe.</param>
         /// <returns>A collection of <see cref="Diagnostic"/>s that surfaced in the source code, sorted by
         /// <see cref="Diagnostic.Location"/>.</returns>
-        private Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, CancellationToken cancellationToken, bool usePortableReference = false)
+        private Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, CancellationToken cancellationToken)
         {
-            return GetSortedDiagnosticsFromDocumentsAsync(analyzer, this.GetDocuments(sources, language, usePortableReference), cancellationToken);
+            return GetSortedDiagnosticsFromDocumentsAsync(analyzer, this.GetDocuments(sources, language), cancellationToken);
         }
 
         /// <summary>
@@ -64,7 +62,7 @@ namespace TestHelper
         /// <param name="documents">The Documents that the analyzer will be run on</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that the task will observe.</param>
         /// <returns>An IEnumerable of Diagnostics that surfaced in the source code, sorted by Location</returns>
-        protected async static Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents, CancellationToken cancellationToken)
+        protected static async Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsFromDocumentsAsync(DiagnosticAnalyzer analyzer, Document[] documents, CancellationToken cancellationToken)
         {
             var projects = new HashSet<Project>();
             foreach (var document in documents)
@@ -120,14 +118,14 @@ namespace TestHelper
         /// <param name="sources">Classes in the form of strings</param>
         /// <param name="language">The language the source code is in</param>
         /// <returns>A Tuple containing the Documents produced from the sources and their TextSpans if relevant</returns>
-        private Document[] GetDocuments(string[] sources, string language, bool usePortableReference = false)
+        private Document[] GetDocuments(string[] sources, string language)
         {
             if (language != LanguageNames.CSharp && language != LanguageNames.VisualBasic)
             {
                 throw new ArgumentException("Unsupported Language");
             }
 
-            var project = this.CreateProject(sources, language, usePortableReference);
+            var project = this.CreateProject(sources, language);
             var documents = project.Documents.ToArray();
 
             if (sources.Length != documents.Length)
@@ -144,9 +142,9 @@ namespace TestHelper
         /// <param name="source">Classes in the form of a string</param>
         /// <param name="language">The language the source code is in</param>
         /// <returns>A Document created from the source string</returns>
-        protected Document CreateDocument(string source, string language = LanguageNames.CSharp, bool usePortableReference = false)
+        protected Document CreateDocument(string source, string language = LanguageNames.CSharp)
         {
-            return this.CreateProject(new[] { source }, language, usePortableReference).Documents.First();
+            return this.CreateProject(new[] { source }, language).Documents.First();
         }
 
         /// <summary>
@@ -155,7 +153,7 @@ namespace TestHelper
         /// <param name="sources">Classes in the form of strings</param>
         /// <param name="language">The language the source code is in</param>
         /// <returns>A Project created out of the Documents created from the source strings</returns>
-        private Project CreateProject(string[] sources, string language = LanguageNames.CSharp, bool usePortableReference = false)
+        private Project CreateProject(string[] sources, string language = LanguageNames.CSharp)
         {
             string fileNamePrefix = DefaultFilePathPrefix;
             string fileExt = language == LanguageNames.CSharp ? CSharpDefaultFileExt : VisualBasicDefaultExt;
@@ -163,7 +161,7 @@ namespace TestHelper
 
             var projectId = ProjectId.CreateNewId(debugName: TestProjectName);
 
-            var corlibReference = usePortableReference ? PortableCorlibReference : CorlibReference;
+            var corlibReference = CorlibReference;
 
             var solution = new AdhocWorkspace()
                 .CurrentSolution
@@ -185,7 +183,9 @@ namespace TestHelper
             }
 
             ParseOptions parseOptions = solution.GetProject(projectId).ParseOptions;
+#pragma warning disable RS1014 // Do not ignore values returned by methods on immutable objects.
             solution.WithProjectParseOptions(projectId, parseOptions.WithDocumentationMode(DocumentationMode.Diagnose));
+#pragma warning restore RS1014 // Do not ignore values returned by methods on immutable objects.
 
             int count = 0;
             foreach (var source in sources)

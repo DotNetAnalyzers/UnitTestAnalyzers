@@ -16,42 +16,39 @@
     {
         protected static DiagnosticResult[] EmptyDiagnosticResults { get; } = { };
 
-        /// <summary>
-        /// Get the CSharp analyzer being tested - to be implemented in non-abstract class
-        /// </summary>
         protected virtual DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
             return null;
         }
 
-        /// <summary>
-        /// Get the Visual Basic analyzer being tested (C#) - to be implemented in non-abstract class
-        /// </summary>
         protected virtual DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
         {
             return null;
         }
 
         /// <summary>
-        /// Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source
-        /// Note: input a DiagnosticResult for each Diagnostic expected
+        /// Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source.
+        /// Note: input a DiagnosticResult for each Diagnostic expected.
         /// </summary>
-        /// <param name="source">A class in the form of a string to run the analyzer on</param>
-        /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
-        protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult expected, CancellationToken cancellationToken, bool usePortableReference = false)
+        /// <param name="source"> A class in the form of a string to run the analyzer on.</param>
+        /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source.</param>
+        /// <param name="cancellationToken"> The cancelation token. </param>
+        /// <returns> A task.</returns>
+        protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult expected, CancellationToken cancellationToken)
         {
-            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), new[] { expected }, cancellationToken, usePortableReference);
+            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), new[] { expected }, cancellationToken);
         }
 
         /// <summary>
-        /// Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source
-        /// Note: input a DiagnosticResult for each Diagnostic expected
+        /// Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source.
+        /// Note: input a DiagnosticResult for each Diagnostic expected.
         /// </summary>
-        /// <param name="source">A class in the form of a string to run the analyzer on</param>
-        /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source</param>
-        protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken, bool usePortableReference = false)
+        /// <param name="source"> A class in the form of a string to run the analyzer on.</param>
+        /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source.</param>
+        /// <param name="cancellationToken"> The cancelation token.</param>
+        protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken)
         {
-            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected, cancellationToken, usePortableReference);
+            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected, cancellationToken);
         }
 
         /// <summary>
@@ -60,6 +57,8 @@
         /// </summary>
         /// <param name="source">A class in the form of a string to run the analyzer on</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the source</param>
+        /// <param name="cancellationToken">The cancelation token.</param>
+        /// <returns>A task.</returns>
         protected Task VerifyBasicDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken)
         {
             return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected, cancellationToken);
@@ -71,9 +70,11 @@
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        protected Task VerifyCSharpDiagnosticAsync(string[] sources, DiagnosticResult[] expected, CancellationToken cancellationToken, bool usePortableReference = false)
+        /// <param name="cancellationToken">The cancelation token.</param>
+        /// <returns>A task.</returns>
+        protected Task VerifyCSharpDiagnosticAsync(string[] sources, DiagnosticResult[] expected, CancellationToken cancellationToken)
         {
-            return this.VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected, cancellationToken, usePortableReference);
+            return this.VerifyDiagnosticsAsync(sources, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected, cancellationToken);
         }
 
         /// <summary>
@@ -82,6 +83,7 @@
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
+        /// <param name="cancellationToken">The cancelation token.</param>
         protected Task VerifyBasicDiagnosticAsync(string[] sources, DiagnosticResult[] expected, CancellationToken cancellationToken)
         {
             return this.VerifyDiagnosticsAsync(sources, LanguageNames.VisualBasic, this.GetBasicDiagnosticAnalyzer(), expected, cancellationToken);
@@ -95,9 +97,10 @@
         /// <param name="language">The language of the classes represented by the source strings</param>
         /// <param name="analyzer">The analyzer to be run on the source code</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
-        private async Task VerifyDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, DiagnosticResult[] expected, CancellationToken cancellationToken, bool usePortableReference = false)
+        /// <param name="cancellationToken">The cancelation token.</param>
+        private async Task VerifyDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, DiagnosticResult[] expected, CancellationToken cancellationToken)
         {
-            var diagnostics = await this.GetSortedDiagnosticsAsync(sources, language, analyzer, cancellationToken, usePortableReference).ConfigureAwait(false);
+            var diagnostics = await this.GetSortedDiagnosticsAsync(sources, language, analyzer, cancellationToken).ConfigureAwait(false);
             VerifyDiagnosticResults(diagnostics, analyzer, expected);
         }
 

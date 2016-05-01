@@ -1,36 +1,7 @@
-﻿using Microsoft.CodeAnalysis;
-using System;
-
-namespace TestHelper
+﻿namespace TestHelper
 {
-    /// <summary>
-    /// Location where the diagnostic appears, as determined by path, line number, and column number.
-    /// </summary>
-    public struct DiagnosticResultLocation
-    {
-        public DiagnosticResultLocation(string path, int line, int column)
-        {
-            if (line < -1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(line), "line must be >= -1");
-            }
-
-            if (column < -1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(column), "column must be >= -1");
-            }
-
-            this.Path = path;
-            this.Line = line;
-            this.Column = column;
-        }
-
-        public string Path { get; }
-
-        public int Line { get; }
-
-        public int Column { get; }
-    }
+    using System;
+    using Microsoft.CodeAnalysis;
 
     /// <summary>
     /// Struct that stores information about a Diagnostic appearing in a source
@@ -41,7 +12,7 @@ namespace TestHelper
         private DiagnosticResultLocation[] locations;
         private string message;
 
-        public DiagnosticResult(DiagnosticDescriptor descriptor)
+        internal DiagnosticResult(DiagnosticDescriptor descriptor)
             : this()
         {
             this.Id = descriptor.Id;
@@ -49,7 +20,7 @@ namespace TestHelper
             this.MessageFormat = descriptor.MessageFormat;
         }
 
-        public DiagnosticResultLocation[] Locations
+        internal DiagnosticResultLocation[] Locations
         {
             get
             {
@@ -67,17 +38,17 @@ namespace TestHelper
             }
         }
 
-        public LocalizableString MessageFormat
+        internal LocalizableString MessageFormat
         {
             get;
             set;
         }
 
-        public DiagnosticSeverity Severity { get; set; }
+        internal DiagnosticSeverity Severity { get; set; }
 
-        public string Id { get; set; }
+        internal string Id { get; set; }
 
-        public string Message
+        internal string Message
         {
             get
             {
@@ -100,7 +71,7 @@ namespace TestHelper
             }
         }
 
-        public string Path
+        internal string Path
         {
             get
             {
@@ -108,13 +79,13 @@ namespace TestHelper
             }
         }
 
-        public object[] MessageArguments
+        internal object[] MessageArguments
         {
             get;
             set;
         }
 
-        public int Line
+        internal int Line
         {
             get
             {
@@ -122,7 +93,7 @@ namespace TestHelper
             }
         }
 
-        public int Column
+        internal int Column
         {
             get
             {
@@ -149,5 +120,34 @@ namespace TestHelper
             result.locations[result.locations.Length - 1] = new DiagnosticResultLocation(path, line, column);
             return result;
         }
+    }
+
+    /// <summary>
+    /// Location where the diagnostic appears, as determined by path, line number, and column number.
+    /// </summary>
+    internal struct DiagnosticResultLocation
+    {
+        internal DiagnosticResultLocation(string path, int line, int column)
+        {
+            if (line < -1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(line), "line must be >= -1");
+            }
+
+            if (column < -1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(column), "column must be >= -1");
+            }
+
+            this.Path = path;
+            this.Line = line;
+            this.Column = column;
+        }
+
+        internal string Path { get; }
+
+        internal int Line { get; }
+
+        internal int Column { get; }
     }
 }
