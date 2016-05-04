@@ -46,10 +46,7 @@
         private static readonly DiagnosticDescriptor FirstLineArrangeRule = new DiagnosticDescriptor(ArrangeCommentFirstLineDiagnosticId, FirstLineArrangeTitle, FirstLineArrangeMessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: FirstLineArrangeDescription);
 
         /// <inheritdoc/>
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-        {
-            get { return ImmutableArray.Create(AAACommentsRule, FirstLineArrangeRule); }
-        }
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(AAACommentsRule, FirstLineArrangeRule);
 
         /// <inheritdoc/>
         public override void Initialize(AnalysisContext context)

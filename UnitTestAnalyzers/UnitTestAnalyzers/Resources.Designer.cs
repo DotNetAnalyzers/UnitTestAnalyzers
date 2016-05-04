@@ -116,6 +116,33 @@ namespace UnitTestAnalyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unit test method names should match the expected format.
+        /// </summary>
+        internal static string UseCorrectTestNameFormatDescription {
+            get {
+                return ResourceManager.GetString("UseCorrectTestNameFormatDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The unit test method &apos;{0}&apos; does not match the expected format &apos;{1}&apos;, for instance &apos;{2}&apos;.
+        /// </summary>
+        internal static string UseCorrectTestNameFormatMessage {
+            get {
+                return ResourceManager.GetString("UseCorrectTestNameFormatMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the correct test name format.
+        /// </summary>
+        internal static string UseCorrectTestNameFormatTitle {
+            get {
+                return ResourceManager.GetString("UseCorrectTestNameFormatTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unit test class names should end with &apos;UnitTests&apos;.
         /// </summary>
         internal static string UseUnitTestsSuffixDescription {

@@ -46,6 +46,13 @@
                 // If no additional settings file was found use the default settings.
                 settings = settings ?? new AnalyzersSettings();
 
+                // If the defaul regex is the one being used (when a regex is not provided in the analyzer settings file then
+                // use the default examples
+                if (settings.TestMethodNameFormatRegex.Equals(AnalyzersSettings.DefaultRegex))
+                {
+                    settings.TestMethodNameFormatExamples.AddRange(AnalyzersSettings.TestMethodNameFormatDefaultRegexExamples);
+                }
+
                 cachedSettings.Value = settings;
             }
 

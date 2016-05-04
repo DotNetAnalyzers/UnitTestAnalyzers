@@ -21,7 +21,7 @@ namespace UnitTestAnalyzers
         /// <summary>
         /// The ID for diagnostics produced by the <see cref="UseUnitTestsSuffixAnalyzer"/> analyzer.
         /// </summary>
-        public const string DiagnosticId = "UnitTestAnalyzers";
+        public const string DiagnosticId = "UseUnitTestsSuffix";
         private const string Category = "Naming";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.UseUnitTestsSuffixTitle), Resources.ResourceManager, typeof(Resources));
@@ -30,13 +30,7 @@ namespace UnitTestAnalyzers
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
         /// <inheritdoc/>
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-        {
-            get
-            {
-                return ImmutableArray.Create(Rule);
-            }
-        }
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
         /// <inheritdoc/>
         public override void Initialize(AnalysisContext context)

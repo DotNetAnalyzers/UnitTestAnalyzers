@@ -33,8 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Design\UseAAACommentsAnalyzer.cs" />
+    <Compile Include="Documentation\UseAAACommentsAnalyzer.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Naming\UseCorrectTestNameFormatAnalyzer.cs" />
     <Compile Include="Naming\UseUnitTestsSuffixAnalyzer.cs" />
     <Compile Include="Parsers\IUnitTestParser.cs" />
     <Compile Include="Parsers\MSTestParser.cs" />

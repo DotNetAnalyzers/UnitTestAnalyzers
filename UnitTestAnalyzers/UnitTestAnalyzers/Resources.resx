@@ -135,6 +135,15 @@
   <data name="UseAAACommentsAnalyzerTitle" xml:space="preserve">
     <value>Use the comments // Arrange. // Act. // Assert.</value>
   </data>
+  <data name="UseCorrectTestNameFormatDescription" xml:space="preserve">
+    <value>Unit test method names should match the expected format</value>
+  </data>
+  <data name="UseCorrectTestNameFormatMessage" xml:space="preserve">
+    <value>The unit test method '{0}' does not match the expected format '{1}', for instance '{2}'</value>
+  </data>
+  <data name="UseCorrectTestNameFormatTitle" xml:space="preserve">
+    <value>Use the correct test name format</value>
+  </data>
   <data name="UseUnitTestsSuffixDescription" xml:space="preserve">
     <value>Unit test class names should end with 'UnitTests'</value>
   </data>
