@@ -23,12 +23,18 @@
         public static readonly string NoTestMethodNameExamplesProvided = "NO TEST NAME EXAMPLES PROVIDED!";
 
         /// <summary>
+        /// The group name of the regex used to validate test names <see cref="TestMethodNameFormat"/>.
+        /// If the provided regex contains a group with this name then the test must invoke a member whose name matches the
+        /// part of the test name represented by this group.
+        /// </summary>
+        /// <seealso cref="TestNameMustIncludeMemberUnderTestAnalyzer"/>
+        internal const string MemberUnderTestRegexGroupName = "memberUnderTestName";
+
+        /// <summary>
         /// The default regex used to validate test name formats.
         /// This is the regex that will be used when one is not provided in the analyzer settings file.
         /// </summary>
         internal static readonly Regex DefaultRegex = new Regex($@"\b(?=(?:.*?_){{2,}})(?<{MemberUnderTestRegexGroupName}>[a-zA-Z]+)(?:_When[A-Z]+[a-zA-Z0-9]+)*(?:_Using[A-Z]+[a-zA-Z]+)*(?:_Expects|_Throws)[A-Z]+[a-zA-Z]+\b");
-
-        private const string MemberUnderTestRegexGroupName = "memberUnderTestName";
 
         /// <summary>
         /// This is the backing field for the <see cref="UnitTestFramework"/> property.

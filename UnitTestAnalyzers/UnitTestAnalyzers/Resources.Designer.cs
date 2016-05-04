@@ -89,6 +89,33 @@ namespace UnitTestAnalyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unit test method names should include the name of the member under test.
+        /// </summary>
+        internal static string TestMethodNameMustIncludeMemberUnderTestDescription {
+            get {
+                return ResourceManager.GetString("TestMethodNameMustIncludeMemberUnderTestDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The unit test method &apos;{0}&apos; is targeting the member &apos;{1}&apos; which is not found within the test method body.
+        /// </summary>
+        internal static string TestMethodNameMustIncludeMemberUnderTestMessage {
+            get {
+                return ResourceManager.GetString("TestMethodNameMustIncludeMemberUnderTestMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include the member under test in the test method name.
+        /// </summary>
+        internal static string TestMethodNameMustIncludeMemberUnderTestTitle {
+            get {
+                return ResourceManager.GetString("TestMethodNameMustIncludeMemberUnderTestTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Document the body of the test method with the AAA (Arrange.Act.Assert.) comments.
         /// </summary>
         internal static string UseAAACommentsAnalyzerDescription {

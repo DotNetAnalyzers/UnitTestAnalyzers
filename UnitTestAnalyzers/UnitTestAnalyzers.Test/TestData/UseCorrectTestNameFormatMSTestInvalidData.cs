@@ -7,7 +7,7 @@
     internal class UseCorrectTestNameFormatMSTestInvalidData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
-        {/*
+        {
             // A MSTest TestMethod attribute is present (using statement) and the method name does not have the expected format.
             yield return new object[]
             {
@@ -76,7 +76,7 @@ TestSettingsData.MSTestSettingsSimpleRegex,
 TestSettingsData.TestMethodNameSimpleFormat,
 TestSettingsData.TestMethodNameFormatSimpleRegexExamples
             };
-            */
+
             // A MSTest TestMethod is present and the method name does not have the expected format.
             //  A configuration settings is not provided therefore the default settings should be used.
             yield return new object[]

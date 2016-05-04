@@ -4,9 +4,6 @@
 
     internal static class TestSettingsData
     {
-        internal const string TestMethodNameFormatSimpleRegex = "\"\\\\b[a-zA-Z]{4,}\\\\b\"";
-        internal const string TestMethodNameSimpleFormatJson = "\"(a-zA-Z)[4...n]\"";
-
         internal const string XunitSettings = @"{
                 ""settings"" : {
                 ""unitTestFramework"" : ""Xunit""
@@ -24,6 +21,10 @@
                 ""unitTestFramework"" : ""MSTest""
                 }
               }";
+
+        private const string TestMethodNameFormatSimpleRegex = "\"\\\\b[a-zA-Z]{4,}\\\\b\"";
+        private const string TestMethodNameSimpleFormatJson = "\"(a-zA-Z)[4...n]\"";
+        private const string TestMethodNameMemberUnderTestRegex = "\"\\\\b[a-zA-Z]{4,}_(?<memberUnderTestName>[a-zA-Z]+)\\\\b\"";
 
         internal static string[] TestMethodNameFormatSimpleRegexExamples => new[] { "TestMethodOne", "TestMethodTwo" };
 
@@ -73,6 +74,22 @@
                 ""unitTestFramework"" : ""MSTest"",
                 ""testMethodNameFormat"" : {TestMethodNameSimpleFormatJson},
                 ""testMethodNameFormatRegex"" : {{""Pattern"" : {TestMethodNameFormatSimpleRegex} }},
+                 }}
+              }}";
+
+        internal static string XunitTestSettingsMemberUnderTestRegexFormat =>
+                    $@"{{
+                ""settings"" : {{
+                ""unitTestFramework"" : ""Xunit"",
+                ""testMethodNameFormatRegex"" : {{""Pattern"" : {TestMethodNameMemberUnderTestRegex} }}
+                 }}
+              }}";
+
+        internal static string MSTestSettingsMemberUnderTestRegexFormat =>
+            $@"{{
+                ""settings"" : {{
+                ""unitTestFramework"" : ""MSTest"",
+                ""testMethodNameFormatRegex"" : {{""Pattern"" : {TestMethodNameMemberUnderTestRegex} }}
                  }}
               }}";
 

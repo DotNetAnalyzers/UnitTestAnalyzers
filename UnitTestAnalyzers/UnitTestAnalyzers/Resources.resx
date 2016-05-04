@@ -126,6 +126,15 @@
   <data name="ArrangeCommentMustBeFirstLineTitle" xml:space="preserve">
     <value>The first line of the body of a unit test must be '// Arrange.'</value>
   </data>
+  <data name="TestMethodNameMustIncludeMemberUnderTestDescription" xml:space="preserve">
+    <value>Unit test method names should include the name of the member under test</value>
+  </data>
+  <data name="TestMethodNameMustIncludeMemberUnderTestMessage" xml:space="preserve">
+    <value>The unit test method '{0}' is targeting the member '{1}' which is not found within the test method body</value>
+  </data>
+  <data name="TestMethodNameMustIncludeMemberUnderTestTitle" xml:space="preserve">
+    <value>Include the member under test in the test method name</value>
+  </data>
   <data name="UseAAACommentsAnalyzerDescription" xml:space="preserve">
     <value>Document the body of the test method with the AAA (Arrange.Act.Assert.) comments</value>
   </data>

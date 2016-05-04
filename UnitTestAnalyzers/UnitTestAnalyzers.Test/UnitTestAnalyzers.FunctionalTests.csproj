@@ -122,10 +122,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Design\TestNameMustIncludeMemberUnderTestFunctionalTests.cs" />
     <Compile Include="Documentation\UseAAACommentsFunctionalTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Naming\UseCorrectTestNameFormatFunctionalTests.cs" />
     <Compile Include="Naming\UseUnitTestsSuffixFunctionalTests.cs" />
+    <Compile Include="TestData\TestNameMustIncludeMemberUnderTestAnalyzerMSTestInvalidData.cs" />
+    <Compile Include="TestData\TestNameMustIncludeMemberUnderTestAnalyzerMSTestValidData.cs" />
+    <Compile Include="TestData\TestNameMustIncludeMemberUnderTestAnalyzerXunitTestInvalidData.cs" />
+    <Compile Include="TestData\TestNameMustIncludeMemberUnderTestAnalyzerXunitTestValidData.cs" />
     <Compile Include="TestData\TestSettingsData.cs" />
     <Compile Include="TestData\UseAAACommentsAnalyzerMSTestInvalidData.cs" />
     <Compile Include="TestData\UseAAACommentsAnalyzerMSTestValidData.cs" />
