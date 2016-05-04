@@ -122,9 +122,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Documentation\UseAAACommentsFunctionalTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Naming\UseUnitTestsSuffixFunctionalTests.cs" />
     <Compile Include="TestData\TestSettingsData.cs" />
+    <Compile Include="TestData\UseAAACommentsAnalyzerMSTestInvalidData.cs" />
+    <Compile Include="TestData\UseAAACommentsAnalyzerMSTestValidData.cs" />
+    <Compile Include="TestData\UseAAACommentsAnalyzerXunitTestInvalidData.cs" />
+    <Compile Include="TestData\UseAAACommentsAnalyzerXunitTestValidData.cs" />
     <Compile Include="TestData\UseUnitTestsSuffixMSTestInvalidData.cs" />
     <Compile Include="TestData\UseUnitTestsSuffixMSTestValidData.cs" />
     <Compile Include="Helpers\DiagnosticResult.cs" />

@@ -117,6 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArrangeCommentMustBeFirstLineDescription" xml:space="preserve">
+    <value>The first line within the test body must be the comment '// Arrange.' </value>
+  </data>
+  <data name="ArrangeCommentMustBeFirstLineMessage" xml:space="preserve">
+    <value>The body of the unit test '{0}' does not have its first line with the comment '// Arrange.'</value>
+  </data>
+  <data name="ArrangeCommentMustBeFirstLineTitle" xml:space="preserve">
+    <value>The first line of the body of a unit test must be '// Arrange.'</value>
+  </data>
+  <data name="UseAAACommentsAnalyzerDescription" xml:space="preserve">
+    <value>Document the body of the test method with the AAA (Arrange.Act.Assert.) comments</value>
+  </data>
+  <data name="UseAAACommentsAnalyzerMessage" xml:space="preserve">
+    <value>The body of the unit test method '{0}' must include the following comments // Arrange. // Act. // Assert. on this order</value>
+  </data>
+  <data name="UseAAACommentsAnalyzerTitle" xml:space="preserve">
+    <value>Use the comments // Arrange. // Act. // Assert.</value>
+  </data>
   <data name="UseUnitTestsSuffixDescription" xml:space="preserve">
     <value>Unit test class names should end with 'UnitTests'</value>
   </data>

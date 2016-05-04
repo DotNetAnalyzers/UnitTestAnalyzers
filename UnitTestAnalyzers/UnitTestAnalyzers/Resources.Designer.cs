@@ -62,6 +62,60 @@ namespace UnitTestAnalyzers {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The first line within the test body must be the comment &apos;// Arrange.&apos; .
+        /// </summary>
+        internal static string ArrangeCommentMustBeFirstLineDescription {
+            get {
+                return ResourceManager.GetString("ArrangeCommentMustBeFirstLineDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The body of the unit test &apos;{0}&apos; does not have its first line with the comment &apos;// Arrange.&apos;.
+        /// </summary>
+        internal static string ArrangeCommentMustBeFirstLineMessage {
+            get {
+                return ResourceManager.GetString("ArrangeCommentMustBeFirstLineMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The first line of the body of a unit test must be &apos;// Arrange.&apos;.
+        /// </summary>
+        internal static string ArrangeCommentMustBeFirstLineTitle {
+            get {
+                return ResourceManager.GetString("ArrangeCommentMustBeFirstLineTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Document the body of the test method with the AAA (Arrange.Act.Assert.) comments.
+        /// </summary>
+        internal static string UseAAACommentsAnalyzerDescription {
+            get {
+                return ResourceManager.GetString("UseAAACommentsAnalyzerDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The body of the unit test method &apos;{0}&apos; must include the following comments // Arrange. // Act. // Assert. on this order.
+        /// </summary>
+        internal static string UseAAACommentsAnalyzerMessage {
+            get {
+                return ResourceManager.GetString("UseAAACommentsAnalyzerMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the comments // Arrange. // Act. // Assert..
+        /// </summary>
+        internal static string UseAAACommentsAnalyzerTitle {
+            get {
+                return ResourceManager.GetString("UseAAACommentsAnalyzerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unit test class names should end with &apos;UnitTests&apos;.
         /// </summary>
         internal static string UseUnitTestsSuffixDescription {
