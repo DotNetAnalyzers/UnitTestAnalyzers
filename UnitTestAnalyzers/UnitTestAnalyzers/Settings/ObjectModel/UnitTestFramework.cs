@@ -3,11 +3,16 @@
     /// <summary>
     /// Represents the unit test frameworks.
     /// </summary>
-    internal enum UnitTestFramework
+    public enum UnitTestFramework
     {
         /// <summary>
         /// The MSTest framework.
         /// </summary>
-        MSTest
+        MSTest,
+
+        /// <summary>
+        /// The Xunit framework.
+        /// </summary>
+        Xunit
     }
 }

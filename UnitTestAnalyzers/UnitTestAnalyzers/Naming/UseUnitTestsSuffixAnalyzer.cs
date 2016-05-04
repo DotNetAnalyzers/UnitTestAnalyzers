@@ -51,8 +51,12 @@ namespace UnitTestAnalyzers
 
             switch (settings.UnitTestFramework)
             {
-                    case UnitTestFramework.MSTest:
+                case UnitTestFramework.MSTest:
                     unitTestParser = new MSTestParser();
+                    break;
+
+                case UnitTestFramework.Xunit:
+                    unitTestParser = new XunitTestParser();
                     break;
 
                 default:

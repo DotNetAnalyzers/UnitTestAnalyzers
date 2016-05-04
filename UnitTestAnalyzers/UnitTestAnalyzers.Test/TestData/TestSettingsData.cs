@@ -10,6 +10,12 @@
                 }
               }";
 
+        internal const string XunitSettings = @"{
+                ""settings"" : {
+                ""unitTestFramework"" : ""Xunit""
+                }
+              }";
+
         internal const string InvalidSettings = @"
                 ""settings"" : {
                 ""unitTestFramework"" , ""MSTest""

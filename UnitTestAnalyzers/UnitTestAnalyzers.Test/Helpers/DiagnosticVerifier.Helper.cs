@@ -3,14 +3,18 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
     using Microsoft.CodeAnalysis.Text;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using UnitTestAnalyzers.Settings.ObjectModel;
     using UnitTestAnalyzers.Test.TestData;
     using Xunit;
 
@@ -33,9 +37,8 @@
         private static readonly MetadataReference ThisProjectReference = MetadataReference.CreateFromFile(typeof(TestSettingsData).Assembly.Location);
         private static readonly MetadataReference MsTestReference = MetadataReference.CreateFromFile(typeof(TestClassAttribute).Assembly.Location);
         private static readonly MetadataReference XunitReference = MetadataReference.CreateFromFile(typeof(TheoryAttribute).Assembly.Location);
-
-        // TODO from emanoel to emanoel: Remove this hardcoded value for the PCL library.
-        private static readonly MetadataReference PortableCorlibReference = MetadataReference.CreateFromFile(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETPortable\v4.5\Profile\Profile7\System.Runtime.dll");
+        private static readonly string ProgramFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+        private static readonly MetadataReference PortableCorlibReference = MetadataReference.CreateFromFile(Path.Combine(ProgramFilesX86, @"Reference Assemblies\Microsoft\Framework\.NETPortable\v4.5\Profile\Profile7\System.Runtime.dll"));
 
         /// <summary>
         /// Given classes in the form of strings, their language, and an <see cref="DiagnosticAnalyzer"/> to apply to
@@ -47,11 +50,12 @@
         /// <see cref="LanguageNames"/> class.</param>
         /// <param name="analyzer">The analyzer to be run on the sources.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that the task will observe.</param>
+        /// <param name="framework">The targeted unit test framework.</param>
         /// <returns>A collection of <see cref="Diagnostic"/>s that surfaced in the source code, sorted by
         /// <see cref="Diagnostic.Location"/>.</returns>
-        private Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, CancellationToken cancellationToken)
+        private Task<ImmutableArray<Diagnostic>> GetSortedDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, CancellationToken cancellationToken, UnitTestFramework framework)
         {
-            return GetSortedDiagnosticsFromDocumentsAsync(analyzer, this.GetDocuments(sources, language), cancellationToken);
+            return GetSortedDiagnosticsFromDocumentsAsync(analyzer, this.GetDocuments(sources, language, framework), cancellationToken);
         }
 
         /// <summary>
@@ -117,15 +121,16 @@
         /// </summary>
         /// <param name="sources">Classes in the form of strings</param>
         /// <param name="language">The language the source code is in</param>
+        /// <param name="framework">The targeted unit test framework.</param>
         /// <returns>A Tuple containing the Documents produced from the sources and their TextSpans if relevant</returns>
-        private Document[] GetDocuments(string[] sources, string language)
+        private Document[] GetDocuments(string[] sources, string language, UnitTestFramework framework)
         {
             if (language != LanguageNames.CSharp && language != LanguageNames.VisualBasic)
             {
                 throw new ArgumentException("Unsupported Language");
             }
 
-            var project = this.CreateProject(sources, language);
+            var project = this.CreateProject(sources, language, framework);
             var documents = project.Documents.ToArray();
 
             if (sources.Length != documents.Length)
@@ -137,23 +142,13 @@
         }
 
         /// <summary>
-        /// Create a Document from a string through creating a project that contains it.
-        /// </summary>
-        /// <param name="source">Classes in the form of a string</param>
-        /// <param name="language">The language the source code is in</param>
-        /// <returns>A Document created from the source string</returns>
-        protected Document CreateDocument(string source, string language = LanguageNames.CSharp)
-        {
-            return this.CreateProject(new[] { source }, language).Documents.First();
-        }
-
-        /// <summary>
         /// Create a project using the inputted strings as sources.
         /// </summary>
         /// <param name="sources">Classes in the form of strings</param>
         /// <param name="language">The language the source code is in</param>
+        /// <param name="framework">The targed unit test framework.</param>
         /// <returns>A Project created out of the Documents created from the source strings</returns>
-        private Project CreateProject(string[] sources, string language = LanguageNames.CSharp)
+        private Project CreateProject(string[] sources, string language, UnitTestFramework framework)
         {
             string fileNamePrefix = DefaultFilePathPrefix;
             string fileExt = language == LanguageNames.CSharp ? CSharpDefaultFileExt : VisualBasicDefaultExt;
@@ -161,7 +156,24 @@
 
             var projectId = ProjectId.CreateNewId(debugName: TestProjectName);
 
-            var corlibReference = CorlibReference;
+            MetadataReference corlibReference;
+            MetadataReference unitTestFrameworkReference;
+
+            switch (framework)
+            {
+               case UnitTestFramework.MSTest:
+                    unitTestFrameworkReference = MsTestReference;
+                    corlibReference = CorlibReference;
+                    break;
+
+                case UnitTestFramework.Xunit:
+                    unitTestFrameworkReference = XunitReference;
+                    corlibReference = PortableCorlibReference;
+                    break;
+
+                default:
+                    throw new ArgumentException("The provided value is not supported", nameof(framework));
+            }
 
             var solution = new AdhocWorkspace()
                 .CurrentSolution
@@ -172,8 +184,7 @@
                 .AddMetadataReference(projectId, CSharpSymbolsReference)
                 .AddMetadataReference(projectId, CodeAnalysisReference)
                 .AddMetadataReference(projectId, ThisProjectReference)
-                .AddMetadataReference(projectId, MsTestReference)
-                .AddMetadataReference(projectId, XunitReference);
+                .AddMetadataReference(projectId, unitTestFrameworkReference);
 
             var settings = this.GetSettings();
             if (!string.IsNullOrEmpty(settings))

@@ -130,9 +130,12 @@
     <Compile Include="Helpers\DiagnosticResult.cs" />
     <Compile Include="Helpers\DiagnosticVerifier.Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestData\UseUnitTestsSuffixXunitTestInvalidData.cs" />
+    <Compile Include="TestData\UseUnitTestsSuffixXunitTestValidData.cs" />
     <Compile Include="Verifiers\DiagnosticVerifier.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

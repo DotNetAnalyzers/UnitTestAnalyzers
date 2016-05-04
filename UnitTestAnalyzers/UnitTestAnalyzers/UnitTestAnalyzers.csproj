@@ -37,6 +37,7 @@
     <Compile Include="Naming\UseUnitTestsSuffixAnalyzer.cs" />
     <Compile Include="Parsers\IUnitTestParser.cs" />
     <Compile Include="Parsers\MSTestParser.cs" />
+    <Compile Include="Parsers\XunitTestParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

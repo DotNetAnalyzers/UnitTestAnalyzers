@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.Diagnostics;
+    using UnitTestAnalyzers.Settings.ObjectModel;
     using Xunit;
 
     /// <summary>
@@ -36,7 +37,21 @@
         /// <returns> A task.</returns>
         protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult expected, CancellationToken cancellationToken)
         {
-            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), new[] { expected }, cancellationToken);
+            return this.VerifyCSharpDiagnosticAsync(source, expected, cancellationToken, UnitTestFramework.MSTest);
+        }
+
+        /// <summary>
+        /// Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source.
+        /// Note: input a DiagnosticResult for each Diagnostic expected.
+        /// </summary>
+        /// <param name="source"> A class in the form of a string to run the analyzer on.</param>
+        /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source.</param>
+        /// <param name="cancellationToken"> The cancelation token. </param>
+        /// <param name="framework">The targeted unit test framework.</param>
+        /// <returns> A task.</returns>
+        protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult expected, CancellationToken cancellationToken, UnitTestFramework framework)
+        {
+            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), new[] { expected }, cancellationToken, framework);
         }
 
         /// <summary>
@@ -48,7 +63,20 @@
         /// <param name="cancellationToken"> The cancelation token.</param>
         protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken)
         {
-            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected, cancellationToken);
+            return this.VerifyCSharpDiagnosticAsync(source, expected, cancellationToken, UnitTestFramework.MSTest);
+        }
+
+        /// <summary>
+        /// Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source.
+        /// Note: input a DiagnosticResult for each Diagnostic expected.
+        /// </summary>
+        /// <param name="source"> A class in the form of a string to run the analyzer on.</param>
+        /// <param name="expected"> DiagnosticResults that should appear after the analyzer is run on the source.</param>
+        /// <param name="cancellationToken"> The cancelation token.</param>
+        /// <param name="framework">The targeted unit test framework.</param>
+        protected Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken, UnitTestFramework framework)
+        {
+            return this.VerifyDiagnosticsAsync(new[] { source }, LanguageNames.CSharp, this.GetCSharpDiagnosticAnalyzer(), expected, cancellationToken, framework);
         }
 
         /// <summary>
@@ -98,9 +126,24 @@
         /// <param name="analyzer">The analyzer to be run on the source code</param>
         /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
         /// <param name="cancellationToken">The cancelation token.</param>
-        private async Task VerifyDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, DiagnosticResult[] expected, CancellationToken cancellationToken)
+        private Task VerifyDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, DiagnosticResult[] expected, CancellationToken cancellationToken)
         {
-            var diagnostics = await this.GetSortedDiagnosticsAsync(sources, language, analyzer, cancellationToken).ConfigureAwait(false);
+            return this.VerifyDiagnosticsAsync(sources, language, analyzer, expected, cancellationToken, UnitTestFramework.MSTest);
+        }
+
+        /// <summary>
+        /// General method that gets a collection of actual diagnostics found in the source after the analyzer is run,
+        /// then verifies each of them.
+        /// </summary>
+        /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
+        /// <param name="language">The language of the classes represented by the source strings</param>
+        /// <param name="analyzer">The analyzer to be run on the source code</param>
+        /// <param name="expected">DiagnosticResults that should appear after the analyzer is run on the sources</param>
+        /// <param name="cancellationToken">The cancelation token.</param>
+        /// <param name="framework">The targeted unit test framework.</param>
+        private async Task VerifyDiagnosticsAsync(string[] sources, string language, DiagnosticAnalyzer analyzer, DiagnosticResult[] expected, CancellationToken cancellationToken, UnitTestFramework framework)
+        {
+            var diagnostics = await this.GetSortedDiagnosticsAsync(sources, language, analyzer, cancellationToken, framework).ConfigureAwait(false);
             VerifyDiagnosticResults(diagnostics, analyzer, expected);
         }
 
