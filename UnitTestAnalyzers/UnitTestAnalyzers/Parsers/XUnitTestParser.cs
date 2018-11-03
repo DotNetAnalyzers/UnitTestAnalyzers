@@ -16,35 +16,22 @@
         /// <inheritdoc />
         public bool IsUnitTestClass(SyntaxNodeAnalysisContext context)
         {
-            ClassDeclarationSyntax classDeclaration = context.Node as ClassDeclarationSyntax;
-
-            var methods = classDeclaration?.Members.OfType<MethodDeclarationSyntax>();
-
-            if (!methods?.Any() ?? true)
+            if (context.Node is ClassDeclarationSyntax classDeclaration)
             {
-                return false;
+                var methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
+                return methods.Any(x => IsUnitTestMethod(context, x));
             }
-
-            var methodAttributes = methods.SelectMany(m => m.AttributeLists)?.SelectMany(a => a.Attributes).ToList();
-
-            if (!methodAttributes?.Any() ?? false)
-            {
-                return false;
-            }
-
-            if (methodAttributes.Any(methodAttribute => IsTestMethodAttribute(context, methodAttribute)))
-            {
-                return true;
-            }
-
             return false;
         }
 
         /// <inheritdoc />
         public bool IsUnitTestMethod(SyntaxNodeAnalysisContext context)
         {
-            MethodDeclarationSyntax methodDeclaration = context.Node as MethodDeclarationSyntax;
+            return IsUnitTestMethod(context, context.Node as MethodDeclarationSyntax);
+        }
 
+        private static bool IsUnitTestMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
+        {
             var methodAttributes = methodDeclaration?.AttributeLists.SelectMany(a => a.Attributes).ToList();
 
             if (!methodAttributes?.Any() ?? true)
