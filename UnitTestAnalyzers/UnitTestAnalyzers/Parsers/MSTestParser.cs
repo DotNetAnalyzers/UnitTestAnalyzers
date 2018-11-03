@@ -12,10 +12,15 @@
     /// presence of MSTest attributes.
     /// </summary>
     /// <seealso cref="UnitTestAnalyzers.Parsers.IUnitTestParser" />
-    internal class MSTestParser : IUnitTestParser
+    internal class MSTestParser : AttributeBasedTestParser
     {
+        /// <inheritdoc/>
+        protected override string[] TestMethodAttributes { get; } = {
+            "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute"
+        };
+
         /// <inheritdoc />
-        public bool IsUnitTestClass(SyntaxNodeAnalysisContext context)
+        public override bool IsUnitTestClass(SyntaxNodeAnalysisContext context)
         {
             ClassDeclarationSyntax classDeclaration = context.Node as ClassDeclarationSyntax;
 
@@ -36,30 +41,6 @@
             var attributeSymbol = context.SemanticModel.GetSymbolInfo(testClassAttribute).Symbol as IMethodSymbol;
 
             return attributeSymbol?.ToString().StartsWith("Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute", StringComparison.Ordinal) ?? false;
-        }
-
-        /// <inheritdoc />
-        public bool IsUnitTestMethod(SyntaxNodeAnalysisContext context)
-        {
-            MethodDeclarationSyntax methodDeclaration = context.Node as MethodDeclarationSyntax;
-
-            IEnumerable<AttributeSyntax> attributes = methodDeclaration?.AttributeLists.SelectMany(x => x.Attributes).ToList();
-
-            if (!attributes?.Any() ?? true)
-            {
-                return false;
-            }
-
-            AttributeSyntax testMethodAttribute = attributes.FirstOrDefault(x => x.Name.ToString().EndsWith("TestMethod", StringComparison.Ordinal));
-
-            if (testMethodAttribute == null)
-            {
-                return false;
-            }
-
-            var attributeSymbol = context.SemanticModel.GetSymbolInfo(testMethodAttribute).Symbol as IMethodSymbol;
-
-            return attributeSymbol?.ToString().StartsWith("Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute", StringComparison.Ordinal) ?? false;
         }
     }
 }

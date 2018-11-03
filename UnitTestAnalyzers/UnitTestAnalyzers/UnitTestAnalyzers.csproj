@@ -38,6 +38,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Naming\UseCorrectTestNameFormatAnalyzer.cs" />
     <Compile Include="Naming\UseUnitTestsSuffixAnalyzer.cs" />
+    <Compile Include="Parsers\AttributeBasedTestParser.cs" />
     <Compile Include="Parsers\IUnitTestParser.cs" />
     <Compile Include="Parsers\MSTestParser.cs" />
     <Compile Include="Parsers\XunitTestParser.cs" />
