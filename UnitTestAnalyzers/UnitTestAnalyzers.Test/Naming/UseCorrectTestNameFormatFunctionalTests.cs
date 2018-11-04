@@ -48,6 +48,24 @@
             await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None, UnitTestFramework.Xunit).ConfigureAwait(false);
         }
 
+        [Theory]
+        [ClassData(typeof(UseCorrectTestNameFormatNUnitTestInvalidData))]
+        public async Task UseCorrectTestNameFormat_NUnitTestCodeWithViolation_ExpectsDiagnostic(string testCode, string testMethodName, int violantioLine, int violationColumn, string settings, string testMethodFormat, string[] testMethodNameExamples)
+        {
+            this.settings = settings;
+            string testMethodNameExamplesArgument = string.Join(", ", testMethodNameExamples);
+            DiagnosticResult expected = this.CSharpDiagnostic().WithArguments(testMethodName, testMethodFormat, testMethodNameExamplesArgument).WithLocation(violantioLine, violationColumn);
+            await this.VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None, UnitTestFramework.NUnit).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [ClassData(typeof(UseCorrectTestNameFormatNUnitTestValidData))]
+        public async Task UseCorrectTestNameFormat_UsingNUnitTestCodeWithoutViolation_ExpectsNoDiagnostic(string testCode, string settings)
+        {
+            this.settings = settings;
+            await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None, UnitTestFramework.NUnit).ConfigureAwait(false);
+        }
+
         /// <summary>
         /// Get the CSharp analyzer being tested.
         /// </summary>

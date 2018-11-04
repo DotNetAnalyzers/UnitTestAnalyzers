@@ -46,6 +46,23 @@
             await this.VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None, UnitTestFramework.Xunit).ConfigureAwait(false);
         }
 
+        [Theory]
+        [ClassData(typeof(UseUnitTestsSuffixNUnitTestValidData))]
+        public async Task UseUnitTestsSuffix_NUnitTestCodeWithoutViolation_ExpectsNoDiagnostic(string testCode, string settings)
+        {
+            this.settings = settings;
+            await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None, UnitTestFramework.NUnit).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [ClassData(typeof(UseUnitTestsSuffixNUnitTestInvalidData))]
+        public async Task UseUnitTestsSuffix_NUnitTestCodeWithViolation_ExpectsDiagnostic(string testCode, string testClassName, int violantionLine, int violationColumn, string settings)
+        {
+            this.settings = settings;
+            DiagnosticResult expected = this.CSharpDiagnostic().WithArguments(testClassName).WithLocation(violantionLine, violationColumn);
+            await this.VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None, UnitTestFramework.NUnit).ConfigureAwait(false);
+        }
+
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
             return new UseUnitTestsSuffixAnalyzer();

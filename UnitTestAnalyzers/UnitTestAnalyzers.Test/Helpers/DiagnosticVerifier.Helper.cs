@@ -1,4 +1,6 @@
-﻿namespace TestHelper
+﻿using NUnit.Framework;
+
+namespace TestHelper
 {
     using System;
     using System.Collections.Generic;
@@ -37,6 +39,7 @@
         private static readonly MetadataReference ThisProjectReference = MetadataReference.CreateFromFile(typeof(TestSettingsData).Assembly.Location);
         private static readonly MetadataReference MsTestReference = MetadataReference.CreateFromFile(typeof(TestClassAttribute).Assembly.Location);
         private static readonly MetadataReference XunitReference = MetadataReference.CreateFromFile(typeof(TheoryAttribute).Assembly.Location);
+        private static readonly MetadataReference NUnitReference = MetadataReference.CreateFromFile(typeof(TestCaseAttribute).Assembly.Location);
         private static readonly string ProgramFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
         private static readonly MetadataReference PortableCorlibReference = MetadataReference.CreateFromFile(Path.Combine(ProgramFilesX86, @"Reference Assemblies\Microsoft\Framework\.NETPortable\v4.5\Profile\Profile7\System.Runtime.dll"));
 
@@ -170,7 +173,10 @@
                     unitTestFrameworkReference = XunitReference;
                     corlibReference = PortableCorlibReference;
                     break;
-
+                case UnitTestFramework.NUnit:
+                    unitTestFrameworkReference = NUnitReference;
+                    corlibReference = CorlibReference;
+                    break;
                 default:
                     throw new ArgumentException("The provided value is not supported", nameof(framework));
             }
