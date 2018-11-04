@@ -134,10 +134,10 @@ TestSettingsData.XunitSettings
             //  Additionally a settings is provided redefining the test name regex.
             yield return new object[]
             {
-                @"using Microsoft.VisualStudio.TestTools.UnitTesting;
+                @"using Xunit;
 class ClassName
 {
-[TestMethod]
+[Fact]
 public void TestOne() {}
 }",
 TestSettingsData.XunitTestSettingsSimpleRegex
@@ -147,7 +147,7 @@ TestSettingsData.XunitTestSettingsSimpleRegex
             //  Additionally a settings is provided redefining the test name regex.
             yield return new object[]
             {
-                @"using Microsoft.VisualStudio.TestTools.UnitTesting;
+                @"using Xunit;
 class ClassName
 {
 [Theory]
