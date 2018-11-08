@@ -52,6 +52,25 @@
         }
 
         [Theory]
+        [ClassData(typeof(UseAAACommentsAnalyzerNUnitTestInvalidData))]
+        public async Task UseAAAComments_NUnitTestCodeWithViolation_ExpectsDiagnostic(string testCode, string testMethodName, int violantioLine, int violationColumn, string settings, bool hasValidAAAComments, bool firstLineIsArrangeComment)
+        {
+            this.settings = settings;
+            var expectedDiagnostics = new List<DiagnosticResult>();
+            if (!hasValidAAAComments)
+            {
+                expectedDiagnostics.Add(this.CSharpDiagnostic(UseAAACommentsAnalyzer.AAACommentsDiagnosticId).WithArguments(testMethodName).WithLocation(violantioLine, violationColumn));
+            }
+
+            if (!firstLineIsArrangeComment)
+            {
+                expectedDiagnostics.Add(this.CSharpDiagnostic(UseAAACommentsAnalyzer.ArrangeCommentFirstLineDiagnosticId).WithArguments(testMethodName).WithLocation(violantioLine, violationColumn));
+            }
+
+            await this.VerifyCSharpDiagnosticAsync(testCode, expectedDiagnostics.ToArray(), CancellationToken.None, UnitTestFramework.NUnit).ConfigureAwait(false);
+        }
+
+        [Theory]
         [ClassData(typeof(UseAAACommentsAnalyzerMSTestValidData))]
         public async Task UseAAAComments_MSTestCodeWithoutViolation_ExpectsNoDiagnostic(string testCode, string settings)
         {
@@ -65,6 +84,14 @@
         {
             this.settings = settings;
             await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None, UnitTestFramework.Xunit).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [ClassData(typeof(UseAAACommentsAnalyzerNUnitTestValidData))]
+        public async Task UseAAAComments_NUnitTestCodeWithoutViolation_ExpectsNoDiagnostic(string testCode, string settings)
+        {
+            this.settings = settings;
+            await this.VerifyCSharpDiagnosticAsync(testCode, EmptyDiagnosticResults, CancellationToken.None, UnitTestFramework.NUnit).ConfigureAwait(false);
         }
 
         /// <summary>

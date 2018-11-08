@@ -10,6 +10,12 @@
                 }
               }";
 
+        internal const string NUnitSettings = @"{
+                ""settings"" : {
+                ""unitTestFramework"" : ""NUnit""
+                }
+              }";
+
         internal const string InvalidSettings = @"
                 ""settings"" : {
                 ""unitTestFramework"" , ""MSTest""
@@ -50,10 +56,29 @@
                  }}
               }}";
 
+        internal static string NUnitTestSettingsSimpleRegex =>
+            $@"{{
+                ""settings"" : {{
+                ""unitTestFramework"" : ""NUnit"",
+                ""testMethodNameFormat"" : {TestMethodNameSimpleFormatJson},
+                ""testMethodNameFormatRegex"" : {{""Pattern"" : {TestMethodNameFormatSimpleRegex} }},
+                ""testMethodNameFormatExamples"" : {JsonConvert.SerializeObject(TestMethodNameFormatSimpleRegexExamples)}
+                 }}
+              }}";
+
         internal static string XunitTestSettingsSimpleRegexNoFormat =>
                     $@"{{
                 ""settings"" : {{
                 ""unitTestFramework"" : ""Xunit"",
+                ""testMethodNameFormatRegex"" : {{""Pattern"" : {TestMethodNameFormatSimpleRegex} }},
+                ""testMethodNameFormatExamples"" : {JsonConvert.SerializeObject(TestMethodNameFormatSimpleRegexExamples)}
+                 }}
+              }}";
+
+       internal static string NUnitTestSettingsSimpleRegexNoFormat =>
+                    $@"{{
+                ""settings"" : {{
+                ""unitTestFramework"" : ""NUnit"",
                 ""testMethodNameFormatRegex"" : {{""Pattern"" : {TestMethodNameFormatSimpleRegex} }},
                 ""testMethodNameFormatExamples"" : {JsonConvert.SerializeObject(TestMethodNameFormatSimpleRegexExamples)}
                  }}
@@ -81,6 +106,14 @@
                     $@"{{
                 ""settings"" : {{
                 ""unitTestFramework"" : ""Xunit"",
+                ""testMethodNameFormatRegex"" : {{""Pattern"" : {TestMethodNameMemberUnderTestRegex} }}
+                 }}
+              }}";
+
+        internal static string NUnitTestSettingsMemberUnderTestRegexFormat =>
+                    $@"{{
+                ""settings"" : {{
+                ""unitTestFramework"" : ""NUnit"",
                 ""testMethodNameFormatRegex"" : {{""Pattern"" : {TestMethodNameMemberUnderTestRegex} }}
                  }}
               }}";

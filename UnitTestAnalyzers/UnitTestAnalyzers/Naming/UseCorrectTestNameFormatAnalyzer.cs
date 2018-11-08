@@ -42,22 +42,7 @@
         private static void HandleCompilationStart(CompilationStartAnalysisContext context)
         {
             AnalyzersSettings settings = SettingsProvider.GetSettings(context);
-            IUnitTestParser unitTestParser;
-
-            switch (settings.UnitTestFramework)
-            {
-                    case UnitTestFramework.MSTest:
-                    unitTestParser = new MSTestParser();
-                    break;
-
-                    case UnitTestFramework.Xunit:
-                    unitTestParser = new XunitTestParser();
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
-
+            IUnitTestParser unitTestParser = UnitTestParserFactory.Create(settings);
             context.RegisterSyntaxNodeAction(c => AnalyzeNode(c, unitTestParser, settings), SyntaxKind.MethodDeclaration);
         }
 

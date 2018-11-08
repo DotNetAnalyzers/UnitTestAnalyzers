@@ -13,6 +13,11 @@
         /// <summary>
         /// The Xunit framework.
         /// </summary>
-        Xunit
+        Xunit,
+
+        /// <summary>
+        /// The NUnit framework
+        /// </summary>
+        NUnit
     }
 }
